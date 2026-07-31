@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>AnaisKitchen</title>
+
+<!-- Ajout à l'écran d'accueil iPhone en mode "app" plein écran -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AnaisKitchen">
+<meta name="theme-color" content="#16332A">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo"><span class="seal">AK</span> AnaisKitchen</div>
+  <div class="sub">Le carnet de recettes d'Anaïs</div>
+</header>
+
+<main>
+
+  <!-- ============ ONGLET CHOISIR (accueil / milieu) ============ -->
+  <section id="tab-choisir" class="tab-section active">
+    <h2 class="section-title">Ce soir, on mange quoi ?</h2>
+    <p class="section-hint">Filtre par temps ou par mode de cuisson, ou laisse le dé décider.</p>
+
+    <div class="filters">
+      <div class="filter-row" id="chips-temps">
+        <button class="chip active" data-val="tous">Tous les temps</button>
+        <button class="chip" data-val="0-10">0–10 min</button>
+        <button class="chip" data-val="10-20">10–20 min</button>
+        <button class="chip" data-val="20-30">20–30 min</button>
+        <button class="chip" data-val="30-45">30–45 min</button>
+        <button class="chip" data-val="45-9999">45 min +</button>
+      </div>
+      <div class="filter-row" id="chips-mode">
+        <button class="chip active" data-val="tous">Tous les modes</button>
+        <button class="chip" data-val="poele">Poêle</button>
+        <button class="chip" data-val="four">Four</button>
+        <button class="chip" data-val="autre">Autre</button>
+      </div>
+    </div>
+
+    <div class="dice-wrap">
+      <button class="dice-btn" id="dice-btn">🎲</button>
+      <div class="dice-label">Lancer le dé</div>
+    </div>
+
+    <div class="card" id="choix-actuel" style="display:none; align-items:center;"></div>
+
+    <div id="grille-choisir"></div>
+  </section>
+
+  <!-- ============ ONGLET PLANNING ============ -->
+  <section id="tab-planning" class="tab-section">
+    <h2 class="section-title">Planning de la semaine</h2>
+    <p class="section-hint">Assigne une recette à chaque jour.</p>
+    <div id="liste-planning"></div>
+    <button class="btn btn-outline btn-block" id="btn-vider-planning">Vider le planning</button>
+  </section>
+
+  <!-- ============ ONGLET FAVORIS ============ -->
+  <section id="tab-favoris" class="tab-section">
+    <h2 class="section-title">Coups de cœur</h2>
+    <p class="section-hint">Les recettes marquées d'une étoile.</p>
+    <div id="grille-favoris"></div>
+  </section>
+
+  <!-- ============ ONGLET HISTORIQUE & STATS ============ -->
+  <section id="tab-historique" class="tab-section">
+    <h2 class="section-title">Historique &amp; statistiques</h2>
+    <div class="stat-grid" id="stats-grid"></div>
+    <div class="card" id="liste-historique"></div>
+  </section>
+
+  <!-- ============ ONGLET CONGÉLATEUR ============ -->
+  <section id="tab-congelo" class="tab-section">
+    <h2 class="section-title">Congélateur</h2>
+    <p class="section-hint">Trié du plus proche au plus éloigné de la péremption.</p>
+    <form class="add-form-inline" id="form-congelo">
+      <input type="number" id="c-qty" min="1" value="1" placeholder="Nb" required>
+      <input type="text" id="c-nom" placeholder="Nom de l'aliment" required>
+      <input type="date" id="c-date" required>
+      <button class="btn btn-primary" type="submit">+</button>
+    </form>
+    <div id="liste-congelo"></div>
+  </section>
+
+  <!-- ============ ONGLET PROFIL (droite) — ajouter une recette ============ -->
+  <section id="tab-profil" class="tab-section">
+    <h2 class="section-title">Nouvelle recette</h2>
+    <form id="form-recette" class="card">
+      <div class="field">
+        <label for="r-nom">Nom de la recette</label>
+        <input type="text" id="r-nom" placeholder="Ex. Curry de légumes" required>
+      </div>
+      <div class="field">
+        <label for="r-temps">Temps de préparation (minutes)</label>
+        <input type="number" id="r-temps" min="1" placeholder="Ex. 25" required>
+      </div>
+      <div class="field">
+        <label>Mode de cuisson</label>
+        <div class="mode-toggle" id="mode-toggle">
+          <button type="button" class="active" data-mode="poele">🍳 Poêle</button>
+          <button type="button" data-mode="four">🔥 Four</button>
+          <button type="button" data-mode="autre">🍲 Autre</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Photo</label>
+        <div class="photo-drop" id="photo-drop">
+          <span class="txt">Touche pour ajouter une photo</span>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none;">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Enregistrer la recette</button>
+    </form>
+
+    <h2 class="section-title" style="margin-top:26px;">Toutes les recettes</h2>
+    <div id="liste-recettes-profil"></div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<nav class="tabbar">
+  <button data-tab="congelo"><span class="ic">🧊</span>Congélo</button>
+  <button data-tab="historique"><span class="ic">📊</span>Historique</button>
+  <button data-tab="planning"><span class="ic">📅</span>Planning</button>
+  <button data-tab="choisir" class="active"><span class="ic">🎲</span>Ce soir</button>
+  <button data-tab="favoris"><span class="ic">★</span>Favoris</button>
+  <button data-tab="profil"><span class="ic">＋</span>Profil</button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>
